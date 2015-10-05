@@ -1,0 +1,22 @@
+# See https://atom.io/docs/latest/hacking-atom-package-word-count#menus for more details
+'context-menu':
+  'atom-text-editor': [
+    {
+      'label': 'Toggle random-color'
+      'command': 'random-color:toggle'
+    }
+  ]
+'menu': [
+  {
+    'label': 'Packages'
+    'submenu': [
+      'label': 'random-color'
+      'submenu': [
+        {
+          'label': 'Toggle'
+          'command': 'random-color:toggle'
+        }
+      ]
+    ]
+  }
+]
