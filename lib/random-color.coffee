@@ -3,6 +3,7 @@
 module.exports = RandomColor =
   _isActive: false
   _timer: null
+  _syntaxThemes: []
 
   activate: ->
     atom.commands.add 'atom-workspace', 'random-color:toggle', => @toggle()
@@ -18,6 +19,7 @@ module.exports = RandomColor =
       @_changeColors()
     , 1000
     @_isActive = true
+    @_syntaxThemes = @_getThemes('syntax')
 
   _stop: ->
     console.log 'RandomColor stopped!'
@@ -28,9 +30,22 @@ module.exports = RandomColor =
     isActive: @_isActive
 
   _changeColors: ->
+    @_activateRandomSyntaxTheme()
     editors = document.querySelectorAll '.editor'
     for editor in editors
       @_setRandomColors editor
+
+  _activateRandomSyntaxTheme: ->
+    themeConfig = atom.config.get('core.themes')
+    themeConfig[1] = @_pickRandomElement(@_syntaxThemes).name
+    atom.config.set('core.themes', themeConfig)
+    console.log "core.themes: #{atom.config.get('core.themes')}"
+
+  _pickRandomElement: (array) ->
+    array[@_randomNum(array.length)]
+
+  _randomNum: (max) ->
+    Math.floor Math.random() * max
 
   _setRandomColors: (editor) ->
     textRgb = [0..2].map (_) => @_randomNum(256)
@@ -38,5 +53,6 @@ module.exports = RandomColor =
     editor.style['color'] = "rgb(#{textRgb.join()})"
     editor.style['background'] = "rgb(#{backgroundRgb.join()})"
 
-  _randomNum: (max) ->
-    Math.floor Math.random() * max
+  _getThemes: (themeType) ->
+    allThemes = atom.themes.getLoadedThemes()
+    allThemes.filter (theme) -> theme.metadata.theme == themeType
