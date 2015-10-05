@@ -28,11 +28,15 @@ module.exports = RandomColor =
     isActive: @_isActive
 
   _changeColors: ->
-    tile = document.querySelector '.editor'
+    editors = document.querySelectorAll '.editor'
+    for editor in editors
+      @_setRandomColors editor
+
+  _setRandomColors: (editor) ->
     textRgb = [0..2].map (_) => @_randomNum(256)
     backgroundRgb = textRgb.map (val) -> (val + 128) % 256
-    tile.style['color'] = "rgb(#{textRgb.join()})"
-    tile.style['background'] = "rgb(#{backgroundRgb.join()})"
+    editor.style['color'] = "rgb(#{textRgb.join()})"
+    editor.style['background'] = "rgb(#{backgroundRgb.join()})"
 
   _randomNum: (max) ->
     Math.floor Math.random() * max
